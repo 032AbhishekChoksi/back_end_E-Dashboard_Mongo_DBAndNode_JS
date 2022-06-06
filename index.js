@@ -46,8 +46,22 @@ app.get("/products", async (req, resp) => {
 })
 
 app.delete("/product/:id", async (req, resp) => {
-    const result = await Product.deleteOne({_id:req.params.id})
+    const result = await Product.deleteOne({ _id: req.params.id })
     resp.send(result)
+})
+
+app.get("/product/:id", async (req, resp) => {
+    // resp.send(req.params.id)
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        let product = await Product.findOne({ _id: req.params.id });
+        if (product) {
+            resp.send(product)
+        } else {
+            resp.send({ result: 'No Products Found' })
+        }
+    } else {
+        resp.send({ result: 'No Products Found' })
+    }
 })
 
 app.listen(5000)
