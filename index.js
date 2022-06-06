@@ -3,6 +3,7 @@ const cors = require("cors")
 require("./db/config");
 const User = require("./model/User");
 const Product = require("./model/Product");
+const { response } = require("express");
 const app = express();
 
 app.use(express.json());
@@ -62,6 +63,17 @@ app.get("/product/:id", async (req, resp) => {
     } else {
         resp.send({ result: 'No Products Found' })
     }
+})
+
+app.put("/product/:id", async (req, resp) => {
+    // resp.send(req.params.id) 
+    let result = await Product.updateOne(
+        { _id: req.params.id },
+        {
+            $set: req.body
+        }
+    )
+    resp.send(result)
 })
 
 app.listen(5000)
